@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CronEntry { // CronTime since it's not an actual entry, no command to execute
+public class CronTime { // CronTime since it's not an actual entry, no command to execute
     private final Field minutes;
     private final Field hours;
     private final Field daysOfMonth;
@@ -41,7 +41,7 @@ public class CronEntry { // CronTime since it's not an actual entry, no command 
         }
     }
 
-    CronEntry(Field minutes,
+    CronTime(Field minutes,
               Field hours,
               Field daysOfMonth,
               Field months,
@@ -54,7 +54,7 @@ public class CronEntry { // CronTime since it's not an actual entry, no command 
     }
 
 
-    public static CronEntry parse(String crontab) {
+    public static CronTime parse(String crontab) {
         String[] parts = crontab.split(" ");
         if (parts.length < 5 || parts.length > 5) {
             throw new IllegalArgumentException("Cron time entry specification must contain only 5 parts: " +
@@ -65,7 +65,7 @@ public class CronEntry { // CronTime since it's not an actual entry, no command 
         for (int i = 0; i < parts.length; i++) {
             fields[i] = parseField(parts[i]);
         }
-        return new CronEntry(fields[0], fields[1], fields[2], fields[3], fields[4]);
+        return new CronTime(fields[0], fields[1], fields[2], fields[3], fields[4]);
     }
 
     static Field parseField(String field) {
