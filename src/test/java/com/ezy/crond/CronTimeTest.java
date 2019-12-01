@@ -279,4 +279,46 @@ public class CronTimeTest {
         ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
         assertEquals(expectedNextExecution, nextExecution);
     }
+
+    @Test
+    public void testNextExecutionDayOfWeekOverflowDayOfMonthNoOverflow() {
+        String crontab = "5 0 * * 4"; // Execute every Thursday
+        CronTime cronTime = CronTime.parse(crontab);
+        ZonedDateTime fixedTime = ZonedDateTime.of(LocalDate.of(2019, 12, 6), // Friday
+                                                   LocalTime.of(0, 5),
+                                                   ZoneOffset.UTC);
+        ZonedDateTime expectedNextExecution = ZonedDateTime.of(LocalDate.of(2019, 12, 12),
+                                                               LocalTime.of(0, 5),
+                                                               ZoneOffset.UTC);
+        ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
+        assertEquals(expectedNextExecution, nextExecution);
+    }
+
+    @Test
+    public void testNextExecutionDayOfWeekOverflowsMonth() {
+        String crontab = "5 0 8 * 1"; // Execute every Monday and the 8th of the month
+        CronTime cronTime = CronTime.parse(crontab);
+        ZonedDateTime fixedTime = ZonedDateTime.of(LocalDate.of(2019, 12, 31), // Tuesday
+                                                   LocalTime.of(0, 5),
+                                                   ZoneOffset.UTC);
+        ZonedDateTime expectedNextExecution = ZonedDateTime.of(LocalDate.of(2020, 1, 6),
+                                                               LocalTime.of(0, 5),
+                                                               ZoneOffset.UTC);
+        ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
+        assertEquals(expectedNextExecution, nextExecution);
+    }
+
+    @Test
+    public void testNextExecutionDayOfWeekOverflowsMonthButNotDayOfMonth() {
+        String crontab = "5 0 8,31 * 7"; // Execute every Sunday and the 8th and 31st of the month
+        CronTime cronTime = CronTime.parse(crontab);
+        ZonedDateTime fixedTime = ZonedDateTime.of(LocalDate.of(2019, 12, 30), // Monday
+                                                   LocalTime.of(0, 5),
+                                                   ZoneOffset.UTC);
+        ZonedDateTime expectedNextExecution = ZonedDateTime.of(LocalDate.of(2019, 12, 31),
+                                                               LocalTime.of(0, 5),
+                                                               ZoneOffset.UTC);
+        ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
+        assertEquals(expectedNextExecution, nextExecution);
+    }
 }

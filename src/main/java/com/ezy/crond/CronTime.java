@@ -243,6 +243,14 @@ public class CronTime { // CronTime since it's not an actual entry, no command t
             next = nextDOM;
         } else if (getDaysOfMonth().getType() == FieldType.WILDCARD) {
             next = nextDOWinDOM;
+        } else {
+            if (dowToDOMOverflow && getDaysOfMonth().getOverflow()) { // both overflowed
+                next = Math.min(nextDOWinDOM, nextDOM);
+            } else if (dowToDOMOverflow) { // day-of-week-to-day-of-month overflowed month but not days of month
+                next = nextDOM;
+            } else if (getDaysOfMonth().getOverflow()) { // days of month overflowed month but not day-of-week-to-days-of-month
+                next = nextDOWinDOM;
+            }
         }
 
         System.out.println(String.format("Next DOM: %d. Next DOW: %d", nextDOM, nextDOW));
