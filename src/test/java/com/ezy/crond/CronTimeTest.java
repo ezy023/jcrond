@@ -251,8 +251,6 @@ public class CronTimeTest {
     }
     // TODO test next day with intersection of day of month and day of week
     // need to test when both overflow, when either overflow and when neither overflow
-
-
     @Test
     public void testNextExecutionDayOfWeekBeforeNextDayOfMonth() {
         String crontab = "5 0 6 * 3"; // Execute on the 6th of every month and every Wednesday
@@ -268,7 +266,17 @@ public class CronTimeTest {
         assertEquals(expectedNextExecution, nextExecution);
     }
 
-
-
-
+    @Test
+    public void testNextExecutionDayOfMonthOverflowDayOfWeekNoOverflow() {
+        String crontab = "5 0 30 * 4"; // Execute on the 30th and every Thursday
+        CronTime cronTime = CronTime.parse(crontab);
+        ZonedDateTime fixedTime = ZonedDateTime.of(LocalDate.of(2019, 12, 31), // Tuesday
+                                                   LocalTime.of(0, 5),
+                                                   ZoneOffset.UTC);
+        ZonedDateTime expectedNextExecution = ZonedDateTime.of(LocalDate.of(2020, 1, 2),
+                                                               LocalTime.of(0, 5),
+                                                               ZoneOffset.UTC);
+        ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
+        assertEquals(expectedNextExecution, nextExecution);
+    }
 }

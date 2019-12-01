@@ -225,9 +225,15 @@ public class CronTime { // CronTime since it's not an actual entry, no command t
         int nextDOW = getDaysOfWeek().getNext(nextBaseDOW, 1, 7);
         int dowDiff = dayOfWeekDiff(nextBaseDOW, nextDOW);
         /* still need to handle if this overflows */
+        int currentMonthLength = current.getMonth().length(isLeapYear(current.getYear()));
         int nextDOWinDOM = nextBaseDOM + dowDiff;
+        boolean dowToDOMOverflow = false;
+        if (nextDOWinDOM > currentMonthLength) {
+            dowToDOMOverflow = true;
+            nextDOWinDOM = nextDOWinDOM - currentMonthLength;
+        }
 
-        int nextDOM = getDaysOfMonth().getNext(nextBaseDOM, 1, current.getMonth().length(isLeapYear(current.getYear())));
+        int nextDOM = getDaysOfMonth().getNext(nextBaseDOM, 1, currentMonthLength);
 
         /* Logic for if one of the day fields is a wildcard, restrict to the specified field */
         int next = Math.min(nextDOWinDOM, nextDOM);
