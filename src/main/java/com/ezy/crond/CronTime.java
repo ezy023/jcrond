@@ -224,10 +224,21 @@ public class CronTime { // CronTime since it's not an actual entry, no command t
         }
         int nextDOW = getDaysOfWeek().getNext(nextBaseDOW, 1, 7);
         int dowDiff = dayOfWeekDiff(nextBaseDOW, nextDOW);
+        /* still need to handle if this overflows */
         int nextDOWinDOM = nextBaseDOM + dowDiff;
 
         int nextDOM = getDaysOfMonth().getNext(nextBaseDOM, 1, current.getMonth().length(isLeapYear(current.getYear())));
+
+        /* Logic for if one of the day fields is a wildcard, restrict to the specified field */
         int next = Math.min(nextDOWinDOM, nextDOM);
+        if (getDaysOfWeek().getType() == FieldType.WILDCARD && getDaysOfMonth().getType() == FieldType.WILDCARD) {
+            next = Math.min(nextDOWinDOM, nextDOM);
+        } else if (getDaysOfWeek().getType() == FieldType.WILDCARD) {
+            next = nextDOM;
+        } else if (getDaysOfMonth().getType() == FieldType.WILDCARD) {
+            next = nextDOWinDOM;
+        }
+
         System.out.println(String.format("Next DOM: %d. Next DOW: %d", nextDOM, nextDOW));
         System.out.println(String.format("nextDOWinDOM: %d. nextDOM: %d", nextDOWinDOM, nextDOM));
         return current.withDayOfMonth(next);
