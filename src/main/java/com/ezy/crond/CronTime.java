@@ -245,21 +245,24 @@ public class CronTime { // CronTime since it's not an actual entry, no command t
             next = nextDOWinDOM;
         } else {
             if (dowToDOMOverflow && getDaysOfMonth().getOverflow()) { // both overflowed
+                getDaysOfMonth().setOverflow(true);
                 next = Math.min(nextDOWinDOM, nextDOM);
             } else if (dowToDOMOverflow) { // day-of-week-to-day-of-month overflowed month but not days of month
                 next = nextDOM;
             } else if (getDaysOfMonth().getOverflow()) { // days of month overflowed month but not day-of-week-to-days-of-month
+                getDaysOfMonth().setOverflow(false);
                 next = nextDOWinDOM;
             }
         }
 
+        System.out.println(String.format("nextBaseDOM: %d. nextBaseDOW: %d", nextBaseDOM, nextBaseDOW));
         System.out.println(String.format("Next DOM: %d. Next DOW: %d", nextDOM, nextDOW));
         System.out.println(String.format("nextDOWinDOM: %d. nextDOM: %d", nextDOWinDOM, nextDOM));
         return current.withDayOfMonth(next);
     }
 
     int dayOfWeekDiff(int current, int next) {
-        if (current < next) {
+        if (current <= next) {
             return next - current;
         } else {
             int toAdd = next == 7 ? 0 : next;

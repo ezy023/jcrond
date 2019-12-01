@@ -321,4 +321,18 @@ public class CronTimeTest {
         ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
         assertEquals(expectedNextExecution, nextExecution);
     }
+
+    @Test
+    public void testDaysOfMonthOverflowButNotDaysOfWeek() {
+        String crontab = "5 0 2,10,20 * 2"; // Execute every Tuesday and the 2nd, 10th, and 20th of the month
+        CronTime cronTime = CronTime.parse(crontab);
+        ZonedDateTime fixedTime = ZonedDateTime.of(LocalDate.of(2019, 12, 30), // Monday
+                                                   LocalTime.of(0, 5),
+                                                   ZoneOffset.UTC);
+        ZonedDateTime expectedNextExecution = ZonedDateTime.of(LocalDate.of(2019, 12, 31),
+                                                               LocalTime.of(0, 5),
+                                                               ZoneOffset.UTC);
+        ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
+        assertEquals(expectedNextExecution, nextExecution);
+    }
 }
