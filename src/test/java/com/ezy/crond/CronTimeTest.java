@@ -335,4 +335,18 @@ public class CronTimeTest {
         ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
         assertEquals(expectedNextExecution, nextExecution);
     }
+
+    @Test
+    public void testNextExecutionMonthsOverflow() {
+        String crontab = "5 0 * * *";
+        CronTime cronTime = CronTime.parse(crontab);
+        ZonedDateTime fixedTime = ZonedDateTime.of(LocalDate.of(2019, 12, 31),
+                                                   LocalTime.of(0, 5),
+                                                   ZoneOffset.UTC);
+        ZonedDateTime expectedNextExecution = ZonedDateTime.of(LocalDate.of(2020, 1, 1),
+                                                               LocalTime.of(0, 5),
+                                                               ZoneOffset.UTC);
+        ZonedDateTime nextExecution = cronTime.nextExecution(fixedTime);
+        assertEquals(expectedNextExecution, nextExecution);
+    }
 }
