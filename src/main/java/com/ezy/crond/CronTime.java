@@ -117,14 +117,6 @@ public class CronTime { // CronTime since it's not an actual entry, no command t
         }
     }
 
-    static class MinuteField extends Field {
-        MinuteField(FieldType type, int max, int min) { super(type, max, min); }
-
-        static MinuteField fromField(Field field) {
-            return new MinuteField(field.getType(), 0, 59);
-        }
-    }
-
     CronTime(Field minutes,
              Field hours,
              Field daysOfMonth,

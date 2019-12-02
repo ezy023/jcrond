@@ -110,16 +110,6 @@ public class CronTimeTest {
     }
 
     @Test
-    public void testMinuteFieldFromField() {
-        CronTime.Field field = new CronTime.Field(CronTime.FieldType.NUMBER);
-        CronTime.MinuteField minuteField = CronTime.MinuteField.fromField(field);
-
-        assertNotNull(minuteField);
-        assertEquals(0, minuteField.getMax());
-        assertEquals(59, minuteField.getMin());
-    }
-
-    @Test
     public void testNextExecutionHourly() {
         String crontab = "5 * * * *";
         CronTime cronTime = CronTime.parse(crontab);
